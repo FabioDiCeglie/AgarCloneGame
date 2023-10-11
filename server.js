@@ -5,7 +5,8 @@ const app = express();
 
 app.use(express.static(__dirname+'/public'));
 
-const expressServer = app.listen(9000);
+const PORT = 9000
+const expressServer = app.listen(PORT);
 const io = socketio(expressServer);
 
 io.on('connection', (socket) => {
@@ -17,7 +18,7 @@ io.on('connection', (socket) => {
 
 
 
-console.info('Starting server: http://localhost:9000')
+console.info(`Starting server: http://localhost:${PORT}`)
 
 module.exports = {
     app,
