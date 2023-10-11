@@ -1,5 +1,12 @@
-const socket = io.connect('http://localhost:9000')
+const socket = io.connect('http://localhost:9000');
 
-socket.on('init', (initData) => {
-    orbs = initData.orbs;
-})
+// init is called inside of start-game click listener
+const init = async () => {
+  const initOrbs = await socket.emitWithAck('init', {
+    playerName: player.name,
+  });
+
+  orbs = initOrbs;
+
+  draw();
+};
