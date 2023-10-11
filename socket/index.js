@@ -32,6 +32,20 @@ const initGame = () => {
   }
 };
 
+const getLeaderBoard = () => {
+  const leaderBoardArray = players.map((curPlayer) => {
+    if (curPlayer.playerData) {
+      return {
+        name: curPlayer.playerData.name,
+        score: curPlayer.playerData.score,
+      };
+    } else {
+      return {};
+    }
+  });
+  return leaderBoardArray;
+};
+
 initGame();
 
 setInterval(() => {
@@ -96,16 +110,18 @@ io.on('connect', (socket) => {
     );
     // function returns null if not collision, an index if there is a collision
 
-    if (capturedOrbI !== null){
-        orbs.splice(capturedOrbI,1, new Orb(settings))
+    if (capturedOrbI !== null) {
+      orbs.splice(capturedOrbI, 1, new Orb(settings));
 
-        //now update the clients with the new orb
-        const orbData = {
-            capturedOrbI,
-            newOrb: orbs[capturedOrbI]
-        }
-        // emit to all sockets playing the game, the orbSwitch event so it can update orbs...
-        io.to('game').emit('orbSwitch', orbData)
+      //now update the clients with the new orb
+      const orbData = {
+        capturedOrbI,
+        newOrb: orbs[capturedOrbI],
+      };
+      // emit to all sockets playing the game, the orbSwitch event so it can update orbs...
+      io.to('game').emit('orbSwitch', orbData);
+      // emit to all sockets playing the game, the updateLeaderBoard event because someone just scored
+      io.to('game').emit('updateLeaderBoard', getLeaderBoard());
     }
 
     // player collisions of tocking player
@@ -116,11 +132,10 @@ io.on('connect', (socket) => {
       playersForUsers,
       socket.id
     );
-    if(absorbData){
-      io.to('game').emit('playerAbsorbed', absorbData)
+    if (absorbData) {
+      io.to('game').emit('playerAbsorbed', absorbData);
+      io.to('game').emit('updateLeaderBoard', getLeaderBoard());
     }
-
-
   });
 
   socket.on('disconnect', () => {

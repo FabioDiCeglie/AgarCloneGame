@@ -34,5 +34,26 @@ socket.on('orbSwitch', (orbData) => {
 });
 
 socket.on('playerAbsorbed', (absorbData) => {
-  console.log(absorbData);
+  document.querySelector('#game-message').innerHTML = `${absorbData.absorbed} was absorbed by ${absorbData.absorbedBy}`
+  document.querySelector('#game-message').style.opacity = 1;
+  window.setTimeout(()=>{
+      document.querySelector('#game-message').style.opacity = 0;
+  },2000)
+});
+
+socket.on('updateLeaderBoard', (leaderBoardArray) => {
+  leaderBoardArray.sort((a,b) => {
+    return b.score - a.score
+  })
+  document.querySelector('.leader-board').innerHTML = '';
+
+  leaderBoardArray.forEach((p) => {
+    if(!p.name){
+      return;
+    }
+    document.querySelector('.leader-board').innerHTML += `
+    <li class="leaderboard-player">
+    ${p.name} - ${p.score}
+    </li>`;
+  });
 });
