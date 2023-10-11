@@ -1,6 +1,3 @@
-player.locX = Math.floor(500 * Math.random() + 10); // horizontal axis
-player.locY = Math.floor(500 * Math.random() + 10); // vertical axis
-
 const draw = () => {
   //reset the context traslate back to default
   context.setTransform(1, 0, 0, 1, 0, 0);
@@ -15,18 +12,29 @@ const draw = () => {
   //translate moves the cavnas/context to where the player is at
   context.translate(camX, camY);
 
-  context.beginPath();
-  context.fillStyle = 'rgb(255,0,0)';
-  context.arc(player.locX, player.locY, 10, 0, Math.PI * 2);
-  // context.arc(200,200,10,0,Math.PI*2) //draw an arc/circle
-  //arg1 and arg2 are center x and centery of the arc
-  //arg3 = radius of the circle
-  //arg4 = where to start drawing in radians - 0 = 3:00
-  //arg 5 = where to stop drawing in radians - Pi = 90deg
-  context.fill();
-  context.lineWidth = 3;
-  context.strokeStyle = 'rgb(0,255,0)'; // draw a green line
-  context.stroke(); // draw the line border
+  // draw all the players
+  players.forEach((p) => {
+    context.beginPath();
+    context.fillStyle = p.playerData.color;
+
+    // context.arc(200,200,10,0,Math.PI*2) //draw an arc/circle
+    //arg1 and arg2 are center x and centery of the arc
+    //arg3 = radius of the circle
+    //arg4 = where to start drawing in radians - 0 = 3:00
+    //arg 5 = where to stop drawing in radians - Pi = 90deg
+    context.arc(
+      p.playerData.locX,
+      p.playerData.locY,
+      p.playerData.radius,
+      0,
+      Math.PI * 2
+    );
+
+    context.fill();
+    context.lineWidth = 3;
+    context.strokeStyle = 'rgb(0,255,0)'; // draw a green line
+    context.stroke(); // draw the line border
+  });
 
   //draw all the orbs
   orbs.forEach((orb) => {
