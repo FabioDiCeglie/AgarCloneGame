@@ -6,6 +6,13 @@ const init = async () => {
     playerName: player.name,
   });
 
+  setInterval(() => {
+    socket.emit('tock', {
+      xVector: player.xVector,
+      yVector: player.yVector,
+    })
+  },33)
+  
   orbs = initOrbs;
 
   draw();
