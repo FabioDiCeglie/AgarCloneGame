@@ -18,6 +18,7 @@ const settings = {
 };
 
 const players = [];
+let tickTockInterval;
 
 const initGame = () => {
   //loop defaultNumberOfOrbs times, and push a new Orb() onto our array
@@ -28,13 +29,34 @@ const initGame = () => {
 
 initGame();
 
+setInterval(() => {
+  // send the event to the game room
+  io.to('game').emit('tick', players);
+}, 33);
+
 io.on('connect', (socket) => {
   socket.on('init', ({ playerName }, ackCallback) => {
+
+    if (players.length === 0) {
+       tickTockInterval = setInterval(() => {
+        // send the event to the game room
+        io.to('game').emit('tick', players);
+      }, 33);
+    }
+
+    socket.join('game'); // add this socket to the game room
     const playerConfig = new PlayerConfig(settings);
     const playerData = new PlayerData(playerName, settings);
     const player = new Player(socket.id, playerConfig, playerData);
-    players.push(player)
+    players.push(player);
 
-    ackCallback(orbs)
+    ackCallback(orbs);
   });
+
+  socket.on('disconnect', () => {
+    if(players.length === 0){
+        clearInterval(tickTockInterval)
+    }
+  });
+  
 });
