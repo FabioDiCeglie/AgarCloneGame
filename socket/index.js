@@ -18,6 +18,7 @@ const settings = {
 };
 
 const players = [];
+const playersForUsers = []
 let tickTockInterval;
 
 const initGame = () => {
@@ -40,7 +41,7 @@ io.on('connect', (socket) => {
     if (players.length === 0) {
       tickTockInterval = setInterval(() => {
         // send the event to the game room
-        io.to('game').emit('tick', players);
+        io.to('game').emit('tick', playersForUsers);
       }, 33);
     }
 
@@ -48,20 +49,33 @@ io.on('connect', (socket) => {
     const playerConfig = new PlayerConfig(settings);
     const playerData = new PlayerData(playerName, settings);
     player = new Player(socket.id, playerConfig, playerData);
-    players.push(player);
+    players.push(player); // server use only
+    playersForUsers.push({playerData})
 
-    ackCallback(orbs);
+    ackCallback({ orbs, indexInPlayers : playersForUsers.length-1 });
   });
 
   // the client sent over a tock!
   socket.on('tock', (data) => {
-    speed = player.playerConfig.speed;
-    const xV = player.playerConfig.xVector = data.xVector
-    const yV = player.playerConfig.yVector = data.yVector
+    //a tock has come in before the player is set up.
+    //this is because the client kept tocking after disconnect
+    if (!player.playerConfig) {
+      return;
+    }
 
-    if ((player.playerData.locX < 5 && xV < 0) || (player.playerData.locX > 500 && xV > 0)) {
+    speed = player.playerConfig.speed;
+    const xV = (player.playerConfig.xVector = data.xVector);
+    const yV = (player.playerConfig.yVector = data.yVector);
+
+    if (
+      (player.playerData.locX < 5 && xV < 0) ||
+      (player.playerData.locX > 500 && xV > 0)
+    ) {
       player.playerData.locY -= speed * yV;
-    } else if ((player.playerData.locY < 5 && yV > 0) || (player.playerData.locY > 500 && yV < 0)) {
+    } else if (
+      (player.playerData.locY < 5 && yV > 0) ||
+      (player.playerData.locY > 500 && yV < 0)
+    ) {
       player.playerData.locX += speed * xV;
     } else {
       player.playerData.locX += speed * xV;
