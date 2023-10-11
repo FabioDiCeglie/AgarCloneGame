@@ -9,15 +9,6 @@ const PORT = 9000
 const expressServer = app.listen(PORT);
 const io = socketio(expressServer);
 
-io.on('connection', (socket) => {
-
-    socket.on('event', () => {
-
-    })
-})
-
-
-
 console.info(`Starting server: http://localhost:${PORT}`)
 
 module.exports = {
