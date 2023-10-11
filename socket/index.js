@@ -12,12 +12,12 @@ const Orb = require('./classes/Orb');
 
 const orbs = [];
 const settings = {
-  defaultNumberOfOrbs: 500, //number of orbs on the map
+  defaultNumberOfOrbs: 5000, //number of orbs on the map
   defaultSpeed: 8, //player speed
   defaultSize: 6, //default player speed
   defaultZoom: 1.5, // as the player gets bigger, zoom needs to go out
-  worldWidth: 500,
-  worldHeight: 500,
+  worldWidth: 5000,
+  worldHeight: 5000,
   defaultGenericOrbSize: 5, //smaller than player orbs
 };
 
@@ -138,7 +138,18 @@ io.on('connect', (socket) => {
     }
   });
 
-  socket.on('disconnect', () => {
+  socket.on('disconnect', (reason) => {
+    //loop through players and find the player with THIS players socketId
+    //and splice that player out
+    for (let i = 0; i < players.length; i++) {
+      if (players[i].socketId === player.socketId) {
+        //these are the droids we're looking for
+        //splice the player out of the players AND playersForUsers
+        players.splice(i, 1, {});
+        playersForUsers.splice(i, 1, {});
+        break;
+      }
+    }
     if (players.length === 0) {
       clearInterval(tickTockInterval);
     }
