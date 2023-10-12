@@ -1,4 +1,4 @@
-const socket = io.connect('https://agar-clone-game.vercel.app');
+const socket = io.connect('http://localhost:9000');
 
 // init is called inside of start-game click listener
 const init = async () => {
