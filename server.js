@@ -1,17 +1,20 @@
 const express = require('express');
 const socketio = require('socket.io');
+const cors = require('cors');
 const { instrument } = require('@socket.io/admin-ui');
 // const bcrypt = require('bcrypt');
 
+// Allow requests from any origin
 const app = express();
 
+app.use(cors());
 app.use(express.static(__dirname + '/public'));
 
 const PORT = 9000;
 const expressServer = app.listen(PORT);
 const io = socketio(expressServer,{
     cors: {
-        origin: ['http://localhost:3030'],
+        origin: ['http://localhost:3030','https://agar-clone-game.vercel.app'],
         credentials: true,
     }
 });
