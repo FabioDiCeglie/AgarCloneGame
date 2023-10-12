@@ -48,7 +48,6 @@ const checkForPlayerCollisions = (pData,pConfig,players,playersForUsers,playerId
             && pData.locX < pLocx + pData.radius + pR
             && pData.locY + pData.radius + pR > pLocy 
             && pData.locY < pLocy + pData.radius + pR){
-                // console.log("Hit square test!");
         // Pythagoras test
                 distance = Math.sqrt(
                     ((pData.locX - pLocx) * (pData.locX - pLocx)) + 
