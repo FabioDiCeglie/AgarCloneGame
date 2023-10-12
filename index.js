@@ -1,2 +1,1 @@
-require('./express')
 require('./socket');

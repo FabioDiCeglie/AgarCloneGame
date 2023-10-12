@@ -4,7 +4,9 @@
 
 This is a clone of the popular online multiplayer game "Agar.io" created using JavaScript and Socket.io. In this game, players control a cell and aim to grow by consuming smaller cells while avoiding larger ones. It offers real-time multiplayer functionality, allowing multiple players to compete in the same game world.
 
-![Game Screenshot](screenshot.png)
+![Login Screenshot](./public/images/Login.png)
+![Game Screenshot](./public/images/Game.png)
+
 
 ## Features
 
