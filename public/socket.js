@@ -1,3 +1,5 @@
+const io = require('../server').io;
+
 const socket = io.connect('https://agar-clone-game.vercel.app');
 
 // init is called inside of start-game click listener
